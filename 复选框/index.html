@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style>
+		body,ul,h1,h2,h3,h4,h5,h6{margin:0;padding:0;}
+		ul{list-style:none;}
+		#wrap{
+			width:180px;
+			margin:50px auto;
+		}
+		ul{
+			width:100%;
+			height:auto;
+		}
+		li, .all{
+			position: relative;
+			width:100%;
+			height:30px;
+			color:#fff;
+			line-height: 30px;
+		}
+		li.color1{
+			background-color: #bbb;
+		}
+		li.color2{
+			background-color: #777;
+		}
+		li.color3{
+			background-color: #333;
+		}
+		li, .all{
+			text-indent: 50px;
+		}
+		li::after, .all::after, li.checked::after, .all.checked::after{
+			content:'';
+			display: block;
+			position:absolute;
+			left:5px;
+			top:5px;
+			width:20px;
+			height:20px;
+		}
+		li::after, .all::after{
+			background-image: url(images/ckbg1.jpg);
+		}
+		li.checked{
+			text-indent: 35px;
+		}
+		li.checked::after, .all.checked::after{
+			background-image: url(images/ckbg2.jpg);
+		}
+		.all{
+			height:50px;
+			background-color: #880;
+			line-height: 50px;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<ul>
+		</ul>
+		<div class="all">全选</div>
+	</div>
+	<script>
+		var arrColor = ['color1', 'color2', 'color3'],
+			lenColor = arrColor.length,
+			lenLi = 5,
+			oUl = document.getElementsByTagName('ul')[0],
+			all = document.getElementsByClassName('all')[0];
+		//创建每一个input
+		var str = '';
+		for(var i = 0; i < lenLi; i ++){
+			str += "<li class="+arrColor[i%lenColor]+ ">number"+(i + 1)+"</li>";
+		}
+		oUl.innerHTML = str;
+		//给input父级添加点击函数
+		var childs = oUl.children;
+		oUl.onclick = function(e){
+			var tar = e.target;
+			tar.classList.toggle('checked');
+			for(var i = 0; i < lenLi; i ++){
+				if(!childs[i].classList.contains('checked')){
+					all.className = 'all';
+					return;
+				}
+			}
+			all.className = "all checked";
+		}
+		//给全选按钮添加事件
+		all.onclick = function(){
+			this.classList.toggle("checked");
+			var type = all.classList.length == 1? "" : "checked";
+			for(var i = 0; i < lenLi; i ++){
+				type == ""? childs[i].classList.remove("checked") : childs[i].classList.add("checked");
+			}
+		}
+	</script>
+</body>
+</html>

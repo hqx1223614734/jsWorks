@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>多级选项卡</title>
+	<style>
+		body,ul,h3{margin:0;padding:0;}
+		ul{list-style:none;}
+		#wrap{
+			width:400px;
+			margin:50px auto;
+		}
+		ul{
+			position:relative;
+			color:white;
+		}
+		li{
+			width:80px;
+			height:25px;
+		}
+		li + li{
+			margin-top:5px;
+		}
+		h3{
+			width:100%;
+			height:100%;
+			text-align: center;
+			line-height:25px;
+			cursor:pointer;
+			background-color: #000;
+		}
+		.content{
+			display: none;
+			position:absolute;
+			left:85px;
+			top:0;
+		}
+		.content, .pic{
+			width:326px;
+			height:204px;
+		}
+		img{
+			display: none;
+			width:100%;
+			height:100%;
+		}
+		img.active{
+			display: block;
+		}
+		h3.active{
+			background-color: orange;
+		}
+		.pagination{
+			position:absolute;
+			bottom:3px;
+			left:5px;
+		}
+		.pagination span{
+			float:left;
+			display: block;
+			width:20px;
+			height:20px;
+			background-color: black;
+			text-align: center;
+			line-height:20px;
+			cursor:pointer;
+		}
+		.pagination span + span{
+			margin-left:5px;
+		}
+		li.active .content{
+			display: block;
+		}
+		li.active .pagination span.active{
+			background-color: orange;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<ul>
+			<li class="active">
+				<h3 class="active">豪车</h3>
+				<div class="content">
+					<div class="pic">
+						<img class="active" src="img/1.jpg" alt="">
+						<img src="img/2.jpg" alt="">
+						<img src="img/3.jpg" alt="">
+						<img src="img/4.jpg" alt="">
+					</div>
+					<div class="pagination"></div>
+				</div>
+			</li>
+			<li>
+				<h3>美食</h3>
+				<div class="content">
+					<div class="pic">
+						<img class="active" src="img/m1.jpg" alt="">
+						<img src="img/m2.jpg" alt="">
+						<img src="img/m3.jpg" alt="">
+						<img src="img/m4.jpg" alt="">
+						<img src="img/m5.jpg" alt="">
+					</div>
+					<div class="pagination"></div>
+				</div>
+			</li>
+			<li>
+				<h3>美女</h3>
+				<div class="content">
+					<div class="pic">
+						<img class="active" src="img/s1.jpg" alt="">
+						<img src="img/s2.jpg" alt="">
+						<img src="img/s3.jpg" alt="">
+						<img src="img/s4.jpg" alt="">
+						<img src="img/s5.jpg" alt="">
+					</div>
+					<div class="pagination"></div>
+				</div>
+			</li>
+			<li>
+				<h3>美女</h3>
+				<div class="content">
+					<div class="pic">
+						<img class="active" src="img/s1.jpg" alt="">
+						<img src="img/s2.jpg" alt="">
+						<img src="img/s3.jpg" alt="">
+						<img src="img/s4.jpg" alt="">
+						<img src="img/s5.jpg" alt="">
+					</div>
+					<div class="pagination"></div>
+				</div>
+			</li>
+			<li>
+				<h3>美女</h3>
+				<div class="content">
+					<div class="pic">
+						<img class="active" src="img/s1.jpg" alt="">
+						<img src="img/s2.jpg" alt="">
+						<img src="img/s3.jpg" alt="">
+						<img src="img/s4.jpg" alt="">
+						<img src="img/s5.jpg" alt="">
+					</div>
+					<div class="pagination"></div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<script>
+		var oH3 = document.getElementsByTagName("h3"),
+			oLi = document.getElementsByTagName("li"),
+			oPic = document.getElementsByClassName("pic"),
+			oPagination = document.getElementsByClassName("pagination"),
+			len_oPagination = oPagination.length,
+			len_oLi = oLi.length,
+			len_oH3 = oH3.length,
+			index = 0,
+			oLi[0].parentNode.rightIndex = 0;
+
+		//动态生成分页器
+		for(var i = 0; i < len_oPagination; i ++){
+			(function(k){
+				var childs = oPic[k].children,
+				len = childs.length;
+				var str = "<span class='active'>" + 1 + "</span>"
+				for(var j = 1; j < len; j ++){
+					str += "<span>"+ (j + 1) +"</span>"
+				}
+				oPagination[k].innerHTML = str;
+				oPagination[k].rightIndex = 0;
+			})(i);
+			
+		}
+
+		//给每个分页器添加hover效果
+		for(var i = 0; i < len_oPagination; i ++){
+			(function(s){
+				var childs = oPagination[s].children,
+				len = childs.length;
+				for(var j = 0; j < len; j ++){
+					(function(k){
+						childs[k].onmouseenter = function(){
+							var parent = this.parentNode;
+							var childs = parent.children;
+							childs[parent.rightIndex].className = "";
+							oPic[s].children[parent.rightIndex].className = "";
+							oPic[s].children[k].className = "active";
+							parent.rightIndex = k;
+							this.className = "active";
+						}
+					})(j);
+				}
+			}(i));
+		}
+
+		//给每个li添加hover效果
+		for(var i = 0; i < len_oH3; i ++){
+			(function(j){
+				oH3[j].onmouseenter = function(){
+					//如果当前所在栏目等于index,则不需要执行操作
+					if(index == j)return;
+					var m;
+					var liIndex = this.parentNode.parentNode.rightIndex;
+					this.parentNode.parentNode.rightIndex = j;
+					oLi[liIndex].className = "";
+					oLi[liIndex].firstChild.className = "";
+					this.className = "active";
+					this.parentNode.className = "active";
+					//获得之前的index
+					var oldIndex = oPagination[j].rightIndex;
+					//修改当前的rightIndex为0
+					oPagination[j].rightIndex = 0;
+					//初始化图片样式
+					var pics = oPic[j].children;
+					pics[oldIndex].className = "";
+					pics[0].className = "active";
+					//初始化分页器样式
+					var paginations = oPagination[j].children;
+					paginations[oldIndex].className = "";
+					paginations[0].className = "active";
+					//记录当前所在栏目
+					index = j;
+				}
+			})(i);
+		}
+	</script>
+</body>
+</html>

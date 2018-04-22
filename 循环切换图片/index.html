@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style>
+		body{margin:0;padding:0;}
+		.box{
+			position:relative;
+			width:350px;
+			height:350px;
+			margin:50px auto;
+		}
+		.topTitle{
+			position:absolute;
+			top:0;
+			width:100%;
+			height:30px;
+			background-color:rgba(0,0,0,.5);
+			text-align:center;
+			line-height:30px;
+			color:white;
+			z-index:1;
+		}
+		.pic, .pic img{
+			width:100%;
+			height:100%;
+		}
+		.pic img{
+			display:none;
+		}
+		.pic img.on{
+			display:block;
+		}
+		.btn{
+			position:absolute;
+			top:150px;
+			width:30px;
+			height:43px;
+			background:url(images/6.png) no-repeat 0px 0px;
+			cursor:pointer;
+		}
+		.btn:hover{
+			background-position-y:-43px;
+		}
+		.btn-left{
+			left:0px;
+		}
+		.btn-right{
+			right:0px;
+			background-position-x:-29px;
+		}
+		.box .control{
+			position:absolute;
+			bottom:-100px;
+			left:0;
+			right:0;
+			width:230px;
+			height:50px;
+			margin:auto;
+		}
+		.control span{
+			display:block;
+			float:left;
+			width:100px;
+			height:50px;
+			background-color:rgba(0,0,0,.5);
+			color:white;
+			text-align:center;
+			line-height:50px;
+			cursor:pointer;
+		}
+		.control span:nth-child(2){
+			margin-left:30px;
+		}
+		.control span.active{
+			background-color:rgba(250,0,0,.5);
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="topTitle"><span class="current"></span>/<span class="all"></span></div>
+		<div class="pic">
+			<img class="on" src="images/1.jpg" alt=""/>
+			<img src="images/2.jpg" alt=""/>
+			<img src="images/3.jpg" alt=""/>
+			<img src="images/4.jpg" alt=""/>
+			<img src="images/5.gif" alt=""/>
+		</div>
+		<div class="btn btn-left"></div>
+		<div class="btn btn-right"></div>
+		<div class="control">
+			<span class="active">单边切换</span>
+			<span>循环切换</span>
+		</div>
+	</div>
+	<script>
+		var imgs = document.querySelectorAll(".box .pic img"),
+			oCurrent = document.querySelector(".box .topTitle .current"),
+			oAll = document.querySelector(".box .topTitle .all"),
+			btnLeft = document.querySelector(".box .btn-left"),
+			btnRight = document.querySelector(".box .btn-right"),
+			control = document.querySelectorAll(".box .control span"),
+			num = imgs.length;
+			current = 0,
+			flag = false;
+			oCurrent.innerHTML = 1;
+			oAll.innerHTML = num;
+		control[0].onclick = function(){
+			control[1].className= "";
+			this.className = "active";
+			flag = false;
+		}
+		control[1].onclick = function(){
+			control[0].className= "";
+			this.className = "active";
+			flag = true;
+		}
+		btnLeft.onclick = function(){
+			if(current == 0 && flag){
+				imgs[current].className = "";
+				current = num - 1;
+				oCurrent.innerHTML = current + 1;
+				imgs[current].className = "on";
+			}else if(current > 0){
+				imgs[current].className = "";
+				current --;
+				oCurrent.innerHTML = current + 1;
+				imgs[current].className = "on";
+			}
+		}
+		btnRight.onclick = function(){
+			if(current == num - 1 && flag){
+				imgs[current].className = "";
+				current = 0;
+				oCurrent.innerHTML = current + 1;
+				imgs[current].className = "on";
+			}else if(current < num - 1){
+				imgs[current].className = "";
+				current ++;
+				oCurrent.innerHTML = current + 1;
+				imgs[current].className = "on";
+			}
+		}
+	</script>
+</body>
+</html>
