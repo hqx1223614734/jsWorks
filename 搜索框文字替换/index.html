@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>搜索框文字替换</title>
+	<style>
+		body,ul{margin:0;padding:0;}
+		ul{list-style:none;}
+		#wrap{
+			width:500px;
+			height:500px;
+			margin:50px auto;
+			background-color: #888;
+			text-align:center;
+			overflow:hidden;
+		}
+		.top{
+			width:420px;
+			height:30px;
+			margin:20px auto 10px;
+		}
+		.search, .replace{
+			float:left;
+			width:50%;
+			height:100%;
+		}
+		#text{
+			width:calc(100% - 40);
+			height:400px;
+			padding:0 20px 0 20px;
+			text-align:left;
+			white-space: pre-wrap;
+		}
+		span.select{
+			color:red;
+		}
+		#mask{
+			position:absolute;
+			top:0;
+			left:0;
+			display:none;
+			width:100%;
+			height:100%;
+			background-color: #333;
+			opacity:.8;
+			z-index: 1;
+			overflow:hidden;
+		}
+		#mask .text{
+			width:500px;
+			height:500px;
+			margin:50px auto;
+			text-align:center;
+		}
+		#newText{
+			width:100%;
+			height:500px;
+			background-color: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<div class="top">
+			<div class="search">
+				<span>搜索: </span>
+				<input type="text" id="search" oninput="search(this)">
+			</div>
+			<div class="replace">
+				<input type="text" id="replace"> 
+				<button onclick="replace(this)">替换</button> 
+			</div>
+		</div>
+		<div id="text">
+    中兴通讯股份有限公司（英语：ZTE Corporation，全称：Zhongxing Telecommunication Equipment Corporation），简称中兴通讯（ZTE）。
+    总部位于广东省深圳市南山区科技南/路55号，\成立于1985年。全球第四大手机生产制造商，在香港和深圳两地上市，是中国的通信设备上市公司。
+    中兴通讯 [5]  为全球160多个国家和地区的电信运营商提供创新技术与产品解决方案，通过全系列的无线、有线、业务、终端产品和专业通信服务，满足全球不同运营商的差异化需求。
+    中兴通讯为全球180多个国家和地区的顶级运营 商（如中国移动ChinaMobile、美国沃达丰Vodafone、德国电信Telekom、西班牙电信Telefónica等）提供创新技术与产品解决方案，通过全系列的无线、有线、业务、终端产品和专业通信服务，满足全球不同运营商的差异化需求。
+		</div>
+		<button onclick="oMask.style.display = 'block'">载入文字</button>
+	</div>
+	<div id="mask">
+		<div class="text">
+			<textarea id="newText"></textarea>
+			<div><button onclick="inputText()">载入</button></div>
+		</div>
+		
+	</div>
+	<script>
+		var oSearch = document.getElementById('search'),
+			oReplace = document.getElementById('replace'),
+			oText = document.getElementById('text'),
+			oMask = document.getElementById('mask'),
+			newText = document.getElementById('newText'),
+			text = oText.innerHTML;
+		function search(el){
+			var value = el.value.trim();
+			if(value){
+				oText.innerHTML = text.replace(new RegExp(value.replace(/\\/g, '\\\\'), 'g'), "<span class='select'>" + value + "</span>");
+			}else{
+				oText.innerHTML = text;
+			}
+			
+		}
+		function replace(el){
+			if(oSearch.value){
+				var newValue = oReplace.value? oReplace.value : '',
+					oldValue = oSearch.value.replace(/\\/g, '\\\\');
+				text = text.replace(new RegExp(oldValue, 'g'), newValue);
+				oText.innerHTML = text;
+				oSearch.value = '';
+			}
+		}
+		function inputText(){
+			mask.style.display = 'none';
+			var value = newText.value.trim();
+			if(value){
+				oText.innerHTML = text = newText.value;
+			}
+		}
+	</script>
+</body>
+</html>
