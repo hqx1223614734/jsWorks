@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style>
+		body,ul{margin:0;padding:0;font-family:'Microsoft YaHei';font-size:12px;}
+		ul{list-style:none;}
+		#wrap{
+			width:800px;
+			margin:50px auto;
+		}
+		.leftBox, .rightBox{
+			float:left;
+			width:400px;
+			height:400px;
+			overflow:hidden;
+		}
+		.leftBox{
+			background-image:linear-gradient(0deg, #36f 0%, pink 100%);
+		}
+		.rightBox{
+			background-image:linear-gradient(0deg, #f83 0%, #82f 100%);
+		}
+		#hotPlace, #Rinfo{
+			width:340px;
+			margin:50px 0 0 30px;
+			color:orange;
+		}
+		#destination{
+			float:left;
+			width:273px;
+		}
+		#hotPlace span{
+			float:left;
+			margin-left:7px;
+			text-decoration:none;
+			color:black;
+			line-height:20px;
+			cursor:pointer;
+		}
+		#hotPlace span:hover{
+			color:#888;
+		}
+		#Binfo{
+			width:300px;
+			margin:auto;
+		}
+		.clearfix::after{
+			display: block;
+			content:'';
+			clear:both;
+		}
+		.detail{
+			float:left;
+			margin-top:20px;
+			margin-right:20px;
+		}
+		.cancel{
+			cursor:pointer;
+		}
+		.rDetail{
+			float:left;
+			border:2px solid rgba(255,255,255,.5);
+			padding:4px 3px;
+			margin-top: 10px;
+			margin-right:5px;
+			color:white;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<ul class="leftBox">
+			<div id="hotPlace" class="clearfix">
+				<strong style="float:left;">热门目的地 :</strong>
+				<div id="destination"></div>
+			</div>
+			<div id="Binfo"></div>
+		</ul>
+		<ul class="rightBox">
+			<div id="Rinfo"></div>
+		</ul>
+	</div>
+	<script>
+		let dest = ["马来西亚", "泰国", "新西兰", "云南", "三亚", "武汉", "雄安", "太原", "北京", "纽约"];
+		let oDest = document.getElementById("destination"),
+			oBinfo = document.getElementById("Binfo"),
+			oRinfo = document.getElementById("Rinfo"),
+			destChilds = oDest.children;
+		//创建目的地节点
+		let str = "";
+		dest.forEach(item => {
+			str += `<span onclick="insert(this)">${item}</span>`;
+		});
+		oDest.innerHTML += str;
+		//给目的地节点设置属性
+		[].forEach.call(oDest.children, (item, index) => {
+			item.value = item.innerText;
+			item.check = false;
+		});
+		//添加函数
+		function insert(tag){
+			if(tag.check)return;
+			tag.check = true;
+			//左边信息
+			let ospan = document.createElement('span');
+			ospan.className = "detail";
+			ospan.innerHTML = `${tag.value}&nbsp;|&nbsp;&nbsp;<strong class="cancel" onclick="cancel(this)">x</strong>`;
+			oBinfo.appendChild(ospan);
+			//右边信息
+			let rOspan = document.createElement('span');
+			rOspan.className = "rDetail";
+			rOspan.innerText = tag.value;
+			oRinfo.appendChild(rOspan);
+			//保存联动关系
+			ospan.next = rOspan;
+			ospan.src = tag;
+		}
+		//取消函数
+		function cancel(tag){
+			let tar = tag.parentNode,
+				src = tar.src,
+				next = tar.next;
+			src.check = false;
+			tar.parentNode.removeChild(tar);
+			next.parentNode.removeChild(next);
+		}
+	</script>
+</body>
+</html>
