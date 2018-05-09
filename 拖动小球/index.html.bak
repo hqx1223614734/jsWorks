@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ÍÏ¶¯Ð¡Çò</title>
+	<style>
+		#box{
+			position:absolute;
+			width:100px;
+			height:100px;
+			background-color:red;
+		}
+	</style>
+</head>
+<body>
+	<div id="box"></div>
+	<script>
+		let $box = document.getElementById("box"),
+			width = $box.offsetWidth,
+			height = $box.offsetHeight;
+		$box.onmousedown = function(){
+			document.onmousemove = function(e){
+				$box.style.top = e.clientY - height/2 + "px";
+				$box.style.left = e.clientX - width/2 + "px";
+			}
+		}
+		$box.onmouseup = function(){
+			document.onmousemove = null;
+		}
+	</script>
+</body>
+</html>

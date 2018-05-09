@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>singleBall</title>
+	<style>
+		body{margin:0;padding:0;}
+		#ball{
+			position:absolute;
+			width:150px;
+			height:150px;
+			background-color:orange;
+			border:20px solid red;
+			border-radius:50%;
+		}
+	</style>
+</head>
+<body>
+	<div id="ball"></div>
+	<script>
+		let oBall = document.getElementById('ball'),
+			width = document.documentElement.clientWidth,
+			height = document.documentElement.clientHeight,
+			ballWidth = oBall.offsetWidth,
+			ballHeight = oBall.offsetHeight,
+			speedX = 2,
+			speedY = 2,
+			time = 1000/60;
+		setInterval(function(){
+			let top = oBall.offsetTop,
+				left = oBall.offsetLeft;
+			if(top + speedY <= 0 || top + ballHeight + speedY >= height){
+				speedY = -speedY;
+			}
+			if(left + speedX <= 0 || left + ballWidth + speedX >= width){
+				speedX = -speedX;
+			}
+			oBall.style.top = top + speedY +  "px";
+			oBall.style.left = left + speedX + "px";
+		}, time);
+		window.onresize = function(){
+			width = document.documentElement.clientWidth;
+			height = document.documentElement.clientHeight;
+		}
+	</script>
+</body>
+</html>
