@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style>
+		body, ul{margin:0;padding:0;}
+		ul{list-style:none;}
+		#wrap{
+			position:relative;
+			width:500px;
+			height:500px;
+			padding-right:30px;
+			margin:50px auto;
+			border:1px solid red;
+			overflow:hidden;
+		}
+		ul{
+			width:100%;
+			/*height:100%;*/
+			/*transition:;*/
+		}
+		li{
+			width:100%;
+			height:100px;
+			background-image:-webkit-radial-gradient(center, circle farthest-side, yellow 0%, blue 50%, black 100%);
+			text-align:center;
+			line-height:100px;
+		}
+		li + li{
+			margin-top:1px;
+		}
+		.scrollSide{
+			position:absolute;
+			top:0px;
+			right:0px;
+			width:30px;
+			height:100%;
+			visibility:visible;
+			background-image:linear-gradient(90deg, #888 0%, #ccc 50%, #888 100%);
+		}
+		.scrollB{
+			position:absolute;
+			top:0;
+			display: block;
+			width:30px;
+			height:30px;
+			border-radius:30px;
+			background-color:rgb(238,238,238);
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<ul>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+			<li>6</li>
+			<li>7</li>
+			<li>8</li>
+			<li>9</li>
+		</ul>
+		<div class="scrollSide">
+			<span class="scrollB"></span>
+		</div>
+	</div>
+	<script>
+		let oWrap = document.getElementById("wrap"),
+			oUl = oWrap.getElementsByTagName("ul")[0],
+			scrollSide = oWrap.getElementsByClassName("scrollSide")[0],
+			scrollB = scrollSide.firstElementChild,
+			contentHeight = oUl.offsetHeight,
+			barHeight = scrollSide.offsetHeight,
+			scrollBHeight = barHeight * barHeight / contentHeight,
+			contentStep = 10,
+			scrollStep = 10 / (contentHeight - barHeight) * (barHeight - scrollBHeight);
+		let start;
+		//计算滚动条的高度
+		scrollB.style.height = scrollBHeight + "px";
+		//拖拽事件
+
+		addEvent(scrollB, "mousedown", mousedown);
+		function draft(e, start){
+			let dis = start - e.clientY;
+			wheel(e, dis / 120);
+		}
+		//点击事件
+		function mousedown(e){
+			start = e.clientY;
+			addEvent(document, "mousemove", fn)
+			addEvent(document, "mouseup", function(){
+				removeEvent(document, "mousemove", fn);
+			})
+		}
+		
+		function fn(e){
+			draft(e, start);
+		}
+		//绑定滚动事件
+		mouseWheel(oWrap, wheel);
+		function wheel(e, direction){
+			if(!isBorder(direction)){
+				let contentDis = oUl.offsetTop + direction * contentStep,
+					scrollDis = scrollB.offsetTop - direction * scrollStep;
+				oUl.style.marginTop = contentDis + "px";
+				scrollB.style.top = scrollDis + "px";
+			}
+			return false;
+		}
+		//判断滚动条是否滚动到底部
+		function isBorder(direction){
+			let top = oUl.offsetTop,
+				bottom = top + contentHeight;
+			if(bottom + direction < barHeight){
+				oUl.style.marginTop = barHeight - contentHeight + "px";
+				scrollB.style.top = barHeight - scrollBHeight;
+				return true;
+			}else if(top + direction > 0){
+				oUl.style.marginTop = 0;
+				return true;
+			}else{
+				return false;
+			}
+		}
+		//滚动事件兼容函数
+		function mouseWheel(dom, callback){
+			function fn(e){
+				//统一方向
+				let direction = e.wheelDelta / 120 || - e.detail / 3;
+				if(!callback.call(dom, e, direction)){
+					prevent(e);
+				}
+			}
+			addEvent(dom, "mousewheel", fn);
+		}
+		//阻止默认事件兼容函数
+		function prevent(e){
+			if(e.preventDefault){
+				e.preventDefault();
+			}else{
+				e.returnValue = false;
+			}
+		}
+		//绑定事件兼容函数
+		function addEvent(dom, type, callback){
+			if(window.addEventListener){
+				dom.addEventListener(type, callback, false);
+			}else if(window.attachEvent){
+				dom.attachEvent("on" + type, callback);
+			}else{
+				dom[on + "type"] = callback;
+			}
+		}
+		//解绑事件兼容函数
+		function removeEvent(dom, type, callback){
+			if(window.removeEventListener){
+				dom.removeEventListener(type, callback);
+			}else if(window.detachEvent){
+				dom.detachEvnet("on" + type, callback);
+			}
+		}
+	</script>
+</body>
+</html>
