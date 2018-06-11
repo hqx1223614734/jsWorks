@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style>
+		body, ul, img{margin:0;padding:0;}
+		ul{list-style:none;}
+		.wrap{
+			float:left;
+			width:600px;
+			height:400px;
+		}
+		.big{
+			width:100%;
+			height:80%;
+			border:1px dashed blue;
+			/*-webkit-mask-size:100% 100%;
+			-webkit-mask-image:linear-gradient(to top, rgba(51,51,51,.5) 0%, rgba(51,51,51,.5) 100%);
+			-webkit-mask-repeat:no-repeat;*/
+		}
+		.big img{
+			width:100%;
+			height:100%;
+		}
+		.imgs{
+			display: flex;
+			justify-content: space-between;
+			width:100%;
+			height:20%;
+			border:1px solid green;
+		}
+		.imgs li{
+			width:18%;
+			height:100%;
+		}
+		li img{
+			width:100%;
+			height:100%;
+		}
+		.block{
+			position:absolute;
+			width:100px;
+			height:50px;
+			background-size:auto;	
+			background-repeat:no-repeat;
+			z-index: 100;
+		}
+		.rimg{
+			float:left;
+			width:700px;
+			height:350px;
+			background-size:cover;
+			background-repeat:no-repeat;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<div class="big">
+			<img id="imgBig" src="img/1.jpg" alt="">
+		</div>
+		<ul class="imgs">
+			<li><img src="img/1.jpg" alt=""></li>
+			<li><img src="img/2.jpg" alt=""></li>
+			<li><img src="img/3.jpg" alt=""></li>
+			<li><img src="img/4.jpg" alt=""></li>
+			<li><img src="img/5.jpg" alt=""></li>
+		</ul>
+	</div>
+	<div class="rimg"></div>
+	<script>
+		let oBig = document.getElementsByClassName("big")[0],
+			oImgBig = document.getElementById("imgBig"),
+			oImgs = document.querySelectorAll(".imgs img"),
+			oBlock = document.createElement("div"),
+			oWrap = document.getElementsByClassName("wrap")[0],
+			oRimg = document.getElementsByClassName("rimg")[0];
+		let width = 100,
+			height = 50;
+		console.log(oImgBig.width, oImgBig.height)
+		//设置类名,和背景的大小
+		oBlock.className = "block";
+		oRimg.style.backgroundSize = `${oRimg.offsetWidth * oBig.offsetWidth / width}px ${oRimg.offsetHeight * oBig.offsetHeight / height}px`;
+
+		let maxx = oBig.offsetWidth - width,
+			maxy = oBig.offsetHeight - height;
+		[].forEach.call(oImgs, function(item){
+			item.addEventListener("click", function(e){
+				oImgBig.src = this.src;
+			}, false)
+		})
+
+		oBig.addEventListener("mouseenter", function(e){
+			oBig.appendChild(oBlock);
+			oRimg.style.backgroundImage = "url(" + this.children[0].src + ")";
+			oBlock.style.backgroundImage = "url(" + this.children[0].src + ")";
+			let x = e.clientX - width /2,
+				y = e.clientY - height /2;
+			oBlock.style.left = Math.max(0, Math.min(x, maxx)) + "px";
+			oBlock.style.top = Math.max(0, Math.min(y, maxy)) + "px";
+		}, false);
+		oBig.addEventListener("mousemove", function(e){
+			let x = e.clientX - width /2,
+				y = e.clientY - height /2;
+			let px = Math.max(0, Math.min(x, maxx)),
+				py = Math.max(0, Math.min(y, maxy));
+			oRimg.style.backgroundPosition = `${px / maxx * 100}% ${py / maxy * 100}%`;
+			oBlock.style.backgroundPosition = `${px / maxx * 100}% ${py / maxy * 100}%`;
+			oBlock.style.left = px + "px";
+			oBlock.style.top = py + "px";
+		}, false);
+		oBig.addEventListener("mouseleave", function(e){
+			oBig.removeChild(oBlock);
+			oRimg.style.backgroundImage = "";
+		}, false);
+	</script>
+</body>
+</html>
